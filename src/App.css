@@ -1,0 +1,115 @@
+.App {
+  text-align: center;
+}
+
+
+
+
+table {
+  border: 2px solid forestgreen;
+  width: 50%;
+  margin: 44px;
+}
+
+tbody,
+th,
+tr {
+  border: 1px solid black !important
+}
+
+td {
+  text-align: center;
+}
+
+.headtable {
+  width: 50% !important;
+  background-color: black;
+
+}
+
+.inform {
+  width: 50%;
+  justify-content: center;
+  display: inline-block;
+}
+
+.submitb {
+  width: '-webkit-fill-available'
+}
+
+label {
+  display: flex;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.claimPolicy {
+  border-top: 0px;
+  background-color: gray;
+  border: 1px solid black;
+  display: grid;
+  grid-template-columns: repeat(8, 210px);
+  grid-template-rows: 70px;
+  align-items: center;
+
+}
+
+.claimPolicy * {
+
+  text-align: start;
+
+}
+
+.claimPolicyItems {
+  border: 0.5px solid rgb(205, 200, 200);
+  border-top: 0px;
+  display: grid;
+  align-items: center;
+
+  grid-template-rows: 70px;
+  grid-template-columns: repeat(9, 210px);
+}
+
+.claimPolicyItems * {
+  text-align: start;
+}
+
+.claimsettelementMain {
+  background-color: rgb(46, 44, 41);
+  color: white;
+}
+
+.claimsettelement {
+  border-top: 0px;
+  background-color: gray;
+  border: 1px solid black;
+  display: grid;
+  grid-template-columns: repeat(8, 200px);
+  grid-template-rows: 70px;
+  align-items: center;
+
+}
+
+.claimsettelement * {
+
+  text-align: start;
+
+}
+
+.claimsettelementItems {
+  border: 0.5px solid rgb(205, 200, 200);
+  border-top: 0px;
+  display: grid;
+  align-items: center;
+
+  grid-template-rows: 70px;
+  grid-template-columns: repeat(8, 194px);
+}
+
+.claimsettelementItems * {
+  text-align: start;
+}

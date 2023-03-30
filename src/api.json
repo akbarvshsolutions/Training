@@ -1,0 +1,86 @@
+{
+    "data": {
+        "master": {
+            "person": [
+                {
+                    "pid": "p1",
+                    "name": "ram"
+                },
+                {
+                    "pid": "p2",
+                    "name": "sham"
+                },
+                {
+                    "pid": "p3",
+                    "name": "sunil"
+                },
+                {
+                    "pid": "p4",
+                    "name": "ramesh"
+                }
+            ],
+            "policys": [
+                {
+                    "iid": "i1",
+                    "name": "Jeevan Chaya",
+                    "amt": 500,
+                    "maxLimit": 100000
+                },
+                {
+                    "iid": "i2",
+                    "name": "Jeevan Gaurav",
+                    "amt": 600,
+                    "maxLimit": 200000
+                },
+                {
+                    "iid": "i3",
+                    "name": "Jeevan Bali",
+                    "amt": 700,
+                    "maxLimit": 300000
+                },
+                {
+                    "iid": "i4",
+                    "name": "Jeevan Tal",
+                    "amt": 300,
+                    "maxLimit": 50000
+                }
+            ],
+            "personpolicys": [
+                {
+                    "pid": "p1",
+                    "iid": "i1"
+                },
+                {
+                    "pid": "p2",
+                    "iid": "i2"
+                },
+                {
+                    "pid": "p3",
+                    "iid": "i1"
+                },
+                {
+                    "pid": "p4",
+                    "iid": "i3"
+                }
+            ]
+        },
+        "transactions": {
+            "personpolicyclaims": [
+                {
+                    "pid": "p4",
+                    "totalAmt": 40000,
+                    "isapprove": true,
+                    "isreject": false,
+                    "isapplied": true
+                },
+                {
+                    "pid": "p3",
+                    "totalAmt": 200000,
+                    "isapprove": false,
+                    "isreject": true,
+                    "isapplied": true
+                }
+            ]
+        }
+    }
+}
