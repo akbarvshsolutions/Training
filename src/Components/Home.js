@@ -12,34 +12,18 @@ function Home() {
   const [reject, setReject] = useState([])
 
   useEffect(() => {
+    const personpolicyclaims = jsonData.data.transactions.personpolicyclaims;
+    const person1 = jsonData.data.master.person;
 
-    {
-      personpolicyclaims.map((transaction, key) => {
-        if (transaction.isapprove == true) {
-          {
-            person1.map(pers => {
-
-              if (transaction.pid === pers.pid) {
-                setApprove(pers)
-              }
-            })
-
-          }
-        } else {
-          {
-            person1.map(pers => {
-              if (transaction.pid === pers.pid) {
-                setReject(pers)
-              }
-            })
-          }
-
-        }
-
-
-      })
-    }
-  })
+    personpolicyclaims.forEach((transaction) => {
+      const person = person1.find(pers => transaction.pid === pers.pid);
+      if (transaction.isapprove === true) {
+        setApprove(person);
+      } else {
+        setReject(person);
+      }
+    })
+  }, []);
   return (
     <div className='m-4'>
       <table className=' headtable m4-4 p-0 table table-dark '>
