@@ -10,9 +10,10 @@ function Navbar() {
      <div className="container-fluid mx-4">
       
     <Link className="navbar-brand-light text-light" to="/" >Home</Link>
+    <Link className="navbar-brand-light text-light" to="/user" >user</Link>
     <Link className="navbar-brand-light text-light" to="/AddPolicies">AddPolicies</Link>
     <Link className="navbar-brand-light text-light" to="/claimpolicy">claimpolicy</Link>
-    <Link className="navbar-brand-light text-light" to="/</div>claimsettelement">claimsettelement</Link>
+    <Link className="navbar-brand-light text-light" to="/claimsettelement">claimsettelement</Link>
   
    
   </div>

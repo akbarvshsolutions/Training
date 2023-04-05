@@ -1,63 +1,165 @@
 import React, { useEffect, useState } from 'react';
-import jsonData from '../api.json';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function ClaimPolicy() {
-  const personData = jsonData.data.master.person
-  const policy = jsonData.data.master.policys
-  const data = ["#", "Name", "policy", "premium", "MaxLimit", "ReqAmount"]
+  const navigate = useNavigate()
+  const data = ["#", "Name", "policy", "premium", "MaxLimit", "ReqAmount"];
+  const [allpolices, setAllpolices] = useState([]);
+  const [selectedPolicy, setSelectedPolicy] = useState('');
+  
+  const [requestamount, setRequestAmount] = useState('');
+  const [allusers, setAllusers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedData, setSelectedData] = useState([]);
+
+  useEffect(() => {
+    policesdata();
+    userdata();
+  }, []);
+
+  const policesdata = async () => {
+    try {
+      const response = await axios.get('http://localhost:5050/policy');
+      setAllpolices(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const userdata = async () => {
+    try {
+      const response = await axios.get('http://localhost:5050/users');
+      setAllusers(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const userhandleSelect = (e) => {
+    setSelectedUser(e.target.value);
+  };
+
+  const handleSelect = (e) => {
+    setSelectedPolicy(e.target.value);
+  };
+
+
+  const handleSubmit = async () => {
+    const selectedUserData = allusers.find(user => user._id === parseInt(selectedUser));
+    const selectedPolicyData = allpolices.find(policy => policy._id === parseInt(selectedPolicy));
+
+    
+
+      setSelectedData([...selectedData, { user: selectedUserData, policy: selectedPolicyData }]);
+      
+   
+    setSelectedUser('')
+      setSelectedPolicy('')
+
+  };
+  
+  const handlerequestamount = (e) => {
+    setRequestAmount(e.target.value)
+  }
+  const handleclaim = async(id) => {
+    navigate(`/claimsettelement/${id}`);
+ 
+    try {
+      const response = await axios.post('http://localhost:5050/claimUserPolicy', {
+  
+      "name": selectedData[0].user.name,
+      "policyName": selectedData[0].policy.policyName,
+      "policyAmount": selectedData[0].policy.policyAmount,
+      "policyAmountLimit": selectedData[0].policy.policyAmountLimit,
+      "requestedAmt": requestamount
+      });
+   
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  const renderpolicies = allpolices.map((item) => (
+    <option key={item._id} value={item._id}>
+      {item.policyName}
+    </option>
+  ));
+
+  const renderusers = allusers.map((item) => (
+    <option key={item._id} value={item._id}>
+      {item.name}
+    </option>
+  ));
+
   return (
-    <div className="claimPolicyMain">
-      <div className='claimPolicy'>
-        {data.map((ele, i) => {
-          return <p>{ele}</p>
-        })}
-      </div>
-      <div>
-        {personData.map((ele, i) => {
-          return <div className='claimPolicyItems'>
-            <p>{ele.pid}</p>
-            <p>{ele.name}</p>
-            <p>{policy[i].name}</p>
-            <p>{policy[i].amt}</p>
-            <p>{policy[i].maxLimit}</p>
-            <p><input /></p>
-            <p><button type="button" class="btn btn-outline-primary">claim</button></p>
-          </div>
-        })}
-      </div>
-      {/* <table border="1">
-        <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Policy</th>
-          <th>premium</th>
-          <th>MaxLimit</th>
-          <th> ReqAmount</th>
-          <th>claim</th>
-        </tr>
-        </thead>
-     
+    <div className="claimPolicyMain mx-4">
+      <center>
+        <div className="m-4 w-25">
+          <select
+            placeholder="policies"
+            className="form-control w-10 m-2"
+            value={selectedUser}
+            onChange={userhandleSelect}
+          >
+            <option value="">Select user</option>
+            {renderusers}
+          </select>
+          <select
+            placeholder="policies"
+            className="form-control w-10 m-2"
+            value={selectedPolicy}
+            onChange={handleSelect}
+          >
+            <option value="">Select a policy</option>
+            {renderpolicies}
+          </select>
 
-        <tbody>
-          {personData.map((item, i) =>
+          <button className="btn btn-primary mt-2" onClick={handleSubmit}>
+            Submit
+          </button>
+        </div>
+
+        <table className="table">
+          <thead>
             <tr>
-              <td>{item.pid}</td>
-              <td>{item.name}</td>
-              <td>{policy[i].name}</td>
-              <td>{policy[i].amt}</td>
-              <td>{policy[i].maxLimit}</td>
-              <td><input /></td>
-              <td><button type="button" class="btn btn-outline-primary">claim</button></td>
+              {data.map((item, index) => (
+                <th key={index}>{item}</th>
+              ))}
             </tr>
-          )}
-        </tbody>
+          </thead>
+          <tbody>
+            {selectedData.map((item, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{item.user.name}</td>
 
-
-
-      </table> */}
-
+                <td>{item.policy.policyName}</td>
+                <td>{item.policy.policyAmount}</td>
+                <td>{item.policy.policyAmountLimit}</td>
+                <td>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Request Amount"
+                    onChange={handlerequestamount}
+                  />
+                </td>
+                <td>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleclaim(item.policy._id)}
+                  >
+                    Claim
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </center>
     </div>
   );
 }
