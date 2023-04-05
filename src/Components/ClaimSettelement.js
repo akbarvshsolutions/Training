@@ -1,133 +1,168 @@
 import React, { useEffect, useState } from 'react';
-import jsonData from '../api.json';
-
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 function Claimsettelement() {
-  const [approve, setApprove] = useState([])
+  const [approve, setApprove] = useState([]);
+  const [reject, setReject] = useState([]);
+  const [allclaims, setAllclaims] = useState([]);
+  const [policyname, setPolicyname] = useState('');
+  const [amount, setAmount] = useState('');
+  const [maxClaimLimit, setMaxClaimLimit] = useState('');
 
-  const [reject, setReject] = useState([])
-  const personData = jsonData.data.master.person
-  const policy = jsonData.data.master.policys
-
-  const personpolicyclaims = jsonData.data.transactions.personpolicyclaims;
-  const data = ["#", "Name", "policy", "premium", "MaxLimit", "ReqAmount"]
-
+  const data = [ "Name", "policy", "premium", "MaxLimit", "ReqAmount"];
+  const params = useParams();
 
   useEffect(() => {
+    getClaimData();
+    
+  }, []);
 
-    {
-      personpolicyclaims.map((transaction, key) => {
-        if (transaction.isapprove == true) {
-          {
-            personData.map(pers => {
-
-              if (transaction.pid === pers.pid) {
-                setApprove(pers)
-              }
-            })
-
-          }
-        } else {
-          {
-            personData.map(pers => {
-              if (transaction.pid === pers.pid) {
-                setReject(pers)
-              }
-            })
-          }
-
-        }
-
-
-      })
+  const getClaimData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5050/claimUserPolicy');
+      setAllclaims(response.data);
+    } catch (error) {
+      console.log(error);
     }
-  })
+  };
+
+  const handleApprove = async (claim) => {
+    try {
+      const response = await axios.post('http://localhost:5050/approveclaimsettlement', {
+        name: claim.name,
+        policyName: claim.policyName,
+        policyAmount: claim.policyAmount,
+        policyAmountLimit: claim.policyAmountLimit,
+        requestedAmt: claim.requestedAmt,
+      });
+      setApprove((prev) => [...prev, response.data]); // add the newly approved claim to the list of approved claims
+      // set any state variables you need to update
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReject = async (claim) => {
+    try {
+      const response = await axios.post('http://localhost:5050/rejectclaimsettlement', {
+        name: claim.name,
+        policyName: claim.policyName,
+        policyAmount: claim.policyAmount,
+        policyAmountLimit: claim.policyAmountLimit,
+        requestedAmt: claim.requestedAmt,
+      });
+      console.log(response.data);
+      setReject((prev) => [...prev, response.data]); // add the newly approved claim to the list of approved claims
+      // set any state variables you need to update
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className='w-80'>
       <div className="claimsettelementMain">
         <div className='claimsettelement'>
           {data.map((ele, i) => {
-            return <p>{ele}</p>
+            return <p key={i}>{ele}</p>;
           })}
         </div>
         <div>
-          {personData.map((ele, i) => {
-            return <div className='claimsettelementItems'>
-              <p>{ele.pid}</p>
-              <p>{ele.name}</p>
-              <p>{policy[i].name}</p>
-              <p>{policy[i].amt}</p>
-              <p>{policy[i].maxLimit}</p>
-              <p>2000</p>
-              <p><button type="button" class="btn btn-outline-success">Approve</button></p>
-              <p><button type="button" class="btn btn-outline-danger">Reject</button></p>
+        {allclaims.map((item) => (
+  <div className='claimsettelementItems' key={item.id}>
+              <p>{item.name}</p>
+              <p>{item.policyName}</p>
+              
+              <p>{item.policyAmount}</p>
+              <p>{item.policyAmountLimit}</p>
+              <p>{item.requestedAmt}</p>
+              <p>
+                <button type="button" onClick={() => handleApprove(item)}>Approve</button>
+                <button type="button" onClick={() => handleReject(item)}>Reject</button>
+              </p>
             </div>
-          })}
+          ))}
         </div>
       </div>
-      <div className='m-4'>
-        <table className=' headtable m4-4 p-0 table table-dark '>
-          <thead>
-            <th>#</th><th>Name</th><th>Policy</th><th>premium</th><th>MaxLimit</th><th>ReqAmount</th>
-          </thead>
-        </table>
-        <table  >
-          <div><p className='text-white bg-success'>approved</p></div>
-          <tbody class="table table-bordered">
+      <div className='my-2'>
 
-            <th>#</th><th>Name</th>
+        <center>
+          <h4 className='bg-success w-25'>Approved policies</h4>
+          <table border="1">
 
-            <tr><td>{approve.pid}</td><td>{approve.name}</td></tr>
+            <thead>
+              <tr>
 
-          </tbody>
-        </table>
+                <th>Name</th>
+                <th>Policy</th>
+                <th>Policy Amount</th>
+                <th>MaxLimit</th>
+                <th> ReqAmount</th>
 
-        <table  >
-          <div> <p className='text-white bg-danger'>rejected</p></div>
-          <tbody class="table table-bordered">
-
-            <th>#</th><th>Name</th>
-
-            <tr><td>{reject.pid}</td><td>{reject.name}</td></tr>
-
-          </tbody>
-        </table>
+              </tr>
+            </thead>
 
 
+            <tbody>
 
+            {approve.map((claim) => (
+                <tr key={claim.id}>
+                  <td>{claim.name}</td>
+                  <td>{claim.policyName}</td>
+                  <td>{claim.policyAmount}</td>
+                  <td>{claim.policyAmountLimit}</td>
+                  <td>{claim.requestedAmt}</td>
+                </tr>
+              ))}
+
+            </tbody>
+
+
+
+          </table>
+        </center>
       </div>
+      <div>
+        
+        <center>
+        <h4 className='bg-danger w-25'>Reject policies</h4>
+            <table border="1">
+           
+        <thead>
+        <tr>
+        
+          <th>Name</th>
+          <th>Policy</th>
+          <th>Policy Amount</th>
+          <th>MaxLimit</th>
+          <th> ReqAmount</th>
+         
+        </tr>
+        </thead>
+     
 
+        <tbody>
+        
+        {reject.map((claim) => (
+                <tr key={claim.id}>
+                  <td>{claim.name}</td>
+                  <td>{claim.policyName}</td>
+                  <td>{claim.policyAmount}</td>
+                  <td>{claim.policyAmountLimit}</td>
+                  <td>{claim.requestedAmt}</td>
+                </tr>
+              ))}
+          
+        </tbody>
+
+
+
+      </table>
+      </center>
+      </div>
     </div>
   );
 }
 
 export default Claimsettelement;
-
-
-
-
-
-// import React from 'react';
-// import jsonData from '../api.json';
-
-// const personpolicyclaims = jsonData.data.transactions.personpolicyclaims;
-
-// function claimsettelement() {
-//   return (
-//     <div>
-//       <h2>Transactions</h2>
-//       <ul>
-//         {personpolicyclaims.map((transaction) => (
-//           <li key={transaction.pid}>
-//             <span>Total Amount: {transaction.totalAmt}</span>
-//             <span>Approved: {transaction.isapprove.toString()}</span>
-//             <span>Rejected: {transaction.isreject.toString()}</span>
-//             <span>Applied: {transaction.isapplied.toString()}</span>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// export default claimsettelement;
