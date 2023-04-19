@@ -1,0 +1,30 @@
+.form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 400px;
+    margin: 30px auto;
+  }
+  
+  .btn {
+    background: black;
+    height: 50px;
+    color: white;
+    width: 90px;
+    border-radius: 10px;
+    font-size: 20px;
+  }
+  
+  .input-field {
+    width: 300px;
+    display: block;
+    height: 50px;
+  }
+
+  .heading{
+    margin: auto;
+    font-size: 25px;
+    width: 160px;
+    margin-bottom: 5px;
+  }

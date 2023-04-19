@@ -1,0 +1,29 @@
+.albumform {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 400px;
+    margin: 5px auto;
+  }
+  
+  .btn {
+    background: black;
+    height: 50px;
+    color: white;
+    width: 90px;
+    border-radius: 10px;
+    font-size: 20px;
+  }
+  
+  .input-fields{
+    width: 300px;
+    height: 50px;
+  }
+
+  .Table-heading{
+    margin: auto 250px;
+    font-size: 25px;
+    width: 250px;
+    margin-bottom: 5px;
+  }
